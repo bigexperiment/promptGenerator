@@ -120,7 +120,7 @@
         function copyResult() {
             const result = document.getElementById('result').textContent;
             navigator.clipboard.writeText(result).then(() => {
-                alert('Copied to clipboard!');
+
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
                 alert('Failed to copy text. Please try again.');
