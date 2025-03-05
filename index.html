@@ -44,6 +44,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.2s;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #0056b3;
@@ -58,10 +59,36 @@
         }
         .copy-btn {
             background-color: #28a745;
-            margin-top: 10px;
         }
         .copy-btn:hover {
             background-color: #218838;
+        }
+        .chatgpt-btn {
+            background-color: #10a37f;
+        }
+        .chatgpt-btn:hover {
+            background-color: #0d8a6c;
+        }
+        #status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -82,7 +109,11 @@
         </div>
         <button onclick="generatePrompt()">Generate</button>
         <div id="result"></div>
-        <button class="copy-btn" onclick="copyResult()">Copy Result</button>
+        <div class="button-group">
+            <button class="copy-btn" onclick="copyResult()">Copy Result</button>
+            <button class="chatgpt-btn" onclick="openInChatGPT()">Ask in ChatGPT</button>
+        </div>
+        <div id="status"></div>
     </div>
 
     <script>
@@ -98,6 +129,16 @@
             if (savedJobDescription) document.getElementById('jobDescription').value = savedJobDescription;
             if (savedResult) document.getElementById('result').textContent = savedResult;
         };
+
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.style.display = 'block';
+            status.className = isError ? 'status-error' : 'status-success';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
 
         function generatePrompt() {
             const prompt = document.getElementById('prompt').value;
@@ -120,11 +161,24 @@
         function copyResult() {
             const result = document.getElementById('result').textContent;
             navigator.clipboard.writeText(result).then(() => {
-
+                showStatus('Copied to clipboard!');
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
-                alert('Failed to copy text. Please try again.');
+                showStatus('Failed to copy text. Please try again.', true);
             });
+        }
+
+        function openInChatGPT() {
+            const result = document.getElementById('result').textContent;
+            const encodedText = encodeURIComponent(result);
+            
+            // Check if the URL would be too long (browsers typically have a limit around 2000-8000 characters)
+            if (encodedText.length > 7000) {
+                showStatus('Text is too long to open directly in ChatGPT. Please copy and paste manually.', true);
+                return;
+            }
+            
+            window.open(`https://chat.openai.com/?q=${encodedText}`, '_blank');
         }
     </script>
 </body>
