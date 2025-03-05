@@ -119,12 +119,16 @@
     <script>
         // Load saved data when page loads
         window.onload = function() {
-            const savedPrompt = localStorage.getItem('prompt');
+            const defaultPrompt = `Imagine you are interviewing for this role. I will ask you interview questions and you answer them. Not too long. and, most importantly, you understand the context, of this whole role and industry and interview. so that even if i say a word you be smart and answer me . question might be technical or behavioural or from the resume. 
+
+Anser conversationally. use bold text to highlight keywords if necessary. answer conversationally, not in bullet points.  Never return with no anwer. make an intelligent guess and answer even if i ask only one question. also look at the resume and make answers. be really smart- for example if i say mac. u tell if u have experience with mac and what was your experience. so be really smart go!  Ok I will ask you questions one by one and you anser.`;
+
+            const savedPrompt = localStorage.getItem('prompt') || defaultPrompt;
             const savedResume = localStorage.getItem('resume');
             const savedJobDescription = localStorage.getItem('jobDescription');
             const savedResult = localStorage.getItem('result');
 
-            if (savedPrompt) document.getElementById('prompt').value = savedPrompt;
+            document.getElementById('prompt').value = savedPrompt;
             if (savedResume) document.getElementById('resume').value = savedResume;
             if (savedJobDescription) document.getElementById('jobDescription').value = savedJobDescription;
             if (savedResult) document.getElementById('result').textContent = savedResult;
